@@ -24,6 +24,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
         const randomCity = sample(cities);
         const randomPrice = Math.floor(Math.random() * 20) + 10;
         const camp = new Campground({
+            author: envs.USER_ID,
             location: `${randomCity.city}, ${randomCity.state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             image: 'https://source.unsplash.com/collection/190727/',
