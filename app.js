@@ -1,4 +1,7 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const envs = process.env;
 const port = 3000;
 const path = require('path');
@@ -65,7 +68,7 @@ app.use((req, res, next) => {
 })
 
 app.get('/fakeUser', async (req, res) => {
-    const user = new User({email: 'supermario@nintendo.com', username: 'supermario'});
+    const user = new User({ email: 'supermario@nintendo.com', username: 'supermario' });
     const newUser = await User.register(user, 'luigi');
     res.send(newUser)
 })

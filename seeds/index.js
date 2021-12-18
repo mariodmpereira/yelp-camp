@@ -27,9 +27,31 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
             author: envs.USER_ID,
             location: `${randomCity.city}, ${randomCity.state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: 'https://source.unsplash.com/collection/190727/',
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam animi aspernatur aut commodi, corporis exercitationem id illo modi nisi omnis perferendis praesentium quaerat sit soluta totam unde vel voluptatibus.',
-            price: randomPrice
+            price: randomPrice,
+            images: [
+                {
+                    url: 'https://res.cloudinary.com/mariodmpereira/image/upload/v1639909068/yelp-camp/photo-1533873984035-25970ab07461_olujpi.jpg',
+                    filename: '/yelp-camp/photo-1533873984035-25970ab07461_olujpi.jpg',
+                },
+                {
+                    url: 'https://res.cloudinary.com/mariodmpereira/image/upload/v1639909068/yelp-camp/photo-1533575770077-052fa2c609fc_sfithl.jpg',
+                    filename: '/yelp-camp/photo-1533575770077-052fa2c609fc_sfithl.jpg'
+                },
+                {
+                    url: 'https://res.cloudinary.com/mariodmpereira/image/upload/v1639909067/yelp-camp/photo-1563299796-17596ed6b017_q0vbrr.jpg',
+                    filename: '/yelp-camp/photo-1563299796-17596ed6b017_q0vbrr.jpg'
+                },
+                {
+                    url: 'https://res.cloudinary.com/mariodmpereira/image/upload/v1639909067/yelp-camp/photo-1510672981848-a1c4f1cb5ccf_oxeelp.jpg',
+                    filename: '/yelp-camp/photo-1510672981848-a1c4f1cb5ccf_oxeelp.jpg'
+                },
+                {
+                    url: 'https://res.cloudinary.com/mariodmpereira/image/upload/v1639909067/yelp-camp/photo-1556191326-93cfa5533d45_ksvhfb.jpg',
+                    filename: '/yelp-camp/photo-1556191326-93cfa5533d45_ksvhfb.jpg'
+                },
+
+            ],
         })
         await camp.save();
     }
