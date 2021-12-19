@@ -26,6 +26,7 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
         const camp = new Campground({
             author: envs.USER_ID,
             location: `${randomCity.city}, ${randomCity.state}`,
+            geometry: { type: "Point", coordinates: [-113.1331, 47.0202] },
             title: `${sample(descriptors)} ${sample(places)}`,
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam animi aspernatur aut commodi, corporis exercitationem id illo modi nisi omnis perferendis praesentium quaerat sit soluta totam unde vel voluptatibus.',
             price: randomPrice,
