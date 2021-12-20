@@ -20,13 +20,13 @@ const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 (async () => {
     await Campground.deleteMany({});
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 200; i++) {
         const randomCity = sample(cities);
         const randomPrice = Math.floor(Math.random() * 20) + 10;
         const camp = new Campground({
             author: envs.USER_ID,
             location: `${randomCity.city}, ${randomCity.state}`,
-            geometry: { type: "Point", coordinates: [-113.1331, 47.0202] },
+            geometry: { type: "Point", coordinates: [randomCity.longitude, randomCity.latitude] },
             title: `${sample(descriptors)} ${sample(places)}`,
             description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam animi aspernatur aut commodi, corporis exercitationem id illo modi nisi omnis perferendis praesentium quaerat sit soluta totam unde vel voluptatibus.',
             price: randomPrice,
