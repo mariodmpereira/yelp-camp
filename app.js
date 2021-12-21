@@ -2,8 +2,8 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-const { MONGODB_URL } = process.env;
-const port = 3000;
+const { PORT, MONGODB_URL, SECRET } = process.env; // PORT is Heroku's default CURRENT_PORT
+const DEFAULT_PORT = 3000;
 const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
@@ -45,11 +45,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+const CURRENT_SECRET = SECRET || 'thisshouldbeabettersecret!';
+
 const store = MongoStore.create({
     mongoUrl: MONGODB_URL,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'thisshouldbeabettersecret'
+        secret: CURRENT_SECRET
     }
 });
 
@@ -156,6 +158,7 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err });
 })
 
-app.listen(port, () => {
-    console.log(`Serving on port ${port}`);
+const CURRENT_PORT = PORT || DEFAULT_PORT;
+app.listen(CURRENT_PORT, () => {
+    console.log(`Serving on port ${CURRENT_PORT}`);
 })
