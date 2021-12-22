@@ -3,12 +3,14 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const { PORT, MONGODB_URL, SECRET } = process.env; // PORT is Heroku's default CURRENT_PORT
+const express = require('express');
+const app = express();
+require('./modules/mongodb-util')(MONGODB_URL);
+require('./modules/middlewares-handler')(app)
+
 const DEFAULT_PORT = 3000;
 const path = require('path');
 const bodyParser = require('body-parser');
-const express = require('express');
-const app = express();
-const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
@@ -20,22 +22,8 @@ const User = require('./models/user')
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const MongoStore = require('connect-mongo');
+const routes = require('./routes');
 
-const campgroundRoutes = require('./routes/campgrounds');
-const reviewRoutes = require('./routes/reviews');
-const userRoutes = require('./routes/users');
-
-mongoose.connect(MONGODB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-
-db.once('open', () => {
-    console.log('Database Connected');
-})
 app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -140,9 +128,9 @@ app.get('/fakeUser', async (req, res) => {
     res.send(newUser)
 })
 
-app.use('/', userRoutes);
-app.use('/campgrounds', campgroundRoutes)
-app.use('/campgrounds/:id/reviews', reviewRoutes)
+app.use('/', routes.users);
+app.use('/campgrounds', routes.campgrounds)
+app.use('/campgrounds/:id/reviews', routes.reviews)
 
 app.get('/', (req, res) => {
     res.render('home')

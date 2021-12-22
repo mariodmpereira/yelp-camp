@@ -4,7 +4,7 @@ const catchAsync = require("../utils/catchAsync");
 const { isLoggedIn, isAuthor, validateCampground } = require("../middleware");
 const campgrounds = require("../controllers/campgrounds");
 const multer = require('multer');
-const { storage } = require('../cloudinary')
+const { storage } = require('../vendor/cloudinary')
 const upload = multer({ storage });
 
 router.route('/')
