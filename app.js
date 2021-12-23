@@ -9,12 +9,9 @@ require('./modules/mongodb-util')(MONGODB_URL);
 require('./modules/middlewares-handler')(app)
 
 const DEFAULT_PORT = 3000;
-const path = require('path');
-const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
-const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user')
@@ -22,14 +19,6 @@ const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const MongoStore = require('connect-mongo');
 const routes = require('./routes');
-
-app.engine('ejs', ejsMate);
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.urlencoded({ extended: true }));
-app.use(methodOverride('_method'));
-app.use(express.static(path.join(__dirname, 'public')));
 
 const CURRENT_SECRET = SECRET || 'thisshouldbeabettersecret!';
 
