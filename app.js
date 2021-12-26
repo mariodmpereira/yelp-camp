@@ -2,59 +2,22 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-const { PORT, MONGODB_URL, SECRET } = process.env; // PORT is Heroku's default CURRENT_PORT
+const { PORT } = process.env; // PORT is Heroku's default CURRENT_PORT
 const express = require('express');
 const app = express();
-require('./modules/mongodb-util')(MONGODB_URL);
+require('./modules/mongodb-util');
 require('./modules/middlewares-handler')(app)
 
 const DEFAULT_PORT = 3000;
-const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
+
 const User = require('./models/user')
-const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
-const MongoStore = require('connect-mongo');
 const routes = require('./routes');
 
-const CURRENT_SECRET = SECRET || 'thisshouldbeabettersecret!';
-
-const store = MongoStore.create({
-    mongoUrl: MONGODB_URL,
-    touchAfter: 24 * 60 * 60,
-    crypto: {
-        secret: CURRENT_SECRET
-    }
-});
-
-store.on("error", function(e) {
-    console.log('SESSION STORE ERROR', e)
-})
-
-const sessionConfig = {
-    store,
-    name: 'session',
-    secret: 'thisshouldbeabettersecret!',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        // secure: true, // TODO: Does not work on localhost
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-        maxAge: 1000 * 60 * 60 * 24 * 7
-    }
-}
-app.use(session(sessionConfig));
 app.use(flash());
-app.use(mongoSanitize());
-app.use(passport.initialize({}));
-app.use(passport.session({}));
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+
 
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
