@@ -1,12 +1,19 @@
-const path = require("path");
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config({ path: path.join(__dirname, '..', '.env') })
-
-}
-
-const { PORT, MONGODB_URL, SECRET } = process.env; // PORT is Heroku's default CURRENT_PORT
 const PREVIOUS_FOLDER = '..';
 const express = require("express");
+const path = require("path");
+const flash = require("connect-flash");
+
+function listenConfig(app, herokuPort) {
+    const defaultPort = 3000;
+    const port = herokuPort || defaultPort;
+    app.listen(port, () => {
+        console.log(`Serving on port ${port}`);
+    })
+}
+
+function flashConfig(app) {
+    app.use(flash());
+}
 
 function ejsConfig(app) {
     const ejsMate = require("ejs-mate");
@@ -34,13 +41,13 @@ function staticConfig(app) {
     app.use(express.static(path.join(__dirname, PREVIOUS_FOLDER, 'public')));
 }
 
-function sessionConfig(app) {
-    const CURRENT_SECRET = SECRET || 'thisshouldbeabettersecret!';
+function sessionConfig(app, mongoDbUrl, secret) {
+    const CURRENT_SECRET = secret || 'thisshouldbeabettersecret!';
     const MongoStore = require("connect-mongo");
     const session = require('express-session');
 
     const store = MongoStore.create({
-        mongoUrl: MONGODB_URL,
+        mongoUrl: mongoDbUrl,
         touchAfter: 24 * 60 * 60,
         crypto: {
             secret: CURRENT_SECRET
@@ -85,14 +92,16 @@ function passportConfig(app) {
     passport.deserializeUser(User.deserializeUser());
 }
 
-module.exports = (app) => {
+module.exports = (app, mongoDbUrl, secret, herokuPort) => {
+    listenConfig(app, herokuPort);
+    flashConfig(app);
     ejsConfig(app);
     engineConfig(app);
     viewsConfig(app);
     bodyParserConfig(app);
     methodOverrideConfig(app);
     staticConfig(app);
-    sessionConfig(app);
+    sessionConfig(app, mongoDbUrl, secret);
     mongoSanitizeConfig(app);
     passportConfig(app);
 }
