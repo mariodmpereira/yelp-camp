@@ -2,7 +2,7 @@ const PREVIOUS_FOLDER = '..';
 const express = require('express');
 const path = require('path');
 const flash = require('connect-flash');
-const helmet = require("helmet");
+const helmet = require('helmet');
 
 function listenConfig(app, herokuPort) {
     const defaultPort = 3000;
