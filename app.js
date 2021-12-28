@@ -10,8 +10,7 @@ const ExpressError = require('./utils/ExpressError');
 const routes = require('./routes');
 
 require('./modules/mongodb-util')(MONGODB_URL);
-require('./modules/middlewares-handler')(app, MONGODB_URL, SECRET, PORT)
-require('./vendor/cloudinary')(app)
+require('./modules/middlewares-handler')(app, MONGODB_URL, SECRET, PORT);
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;

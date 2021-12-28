@@ -1,7 +1,8 @@
 const PREVIOUS_FOLDER = '..';
-const express = require("express");
-const path = require("path");
-const flash = require("connect-flash");
+const express = require('express');
+const path = require('path');
+const flash = require('connect-flash');
+const helmet = require("helmet");
 
 function listenConfig(app, herokuPort) {
     const defaultPort = 3000;
@@ -16,7 +17,7 @@ function flashConfig(app) {
 }
 
 function ejsConfig(app) {
-    const ejsMate = require("ejs-mate");
+    const ejsMate = require('ejs-mate');
     app.engine('ejs', ejsMate);
 }
 
@@ -33,7 +34,7 @@ function bodyParserConfig(app) {
 }
 
 function methodOverrideConfig(app) {
-    const methodOverride = require("method-override");
+    const methodOverride = require('method-override');
     app.use(methodOverride('_method'));
 }
 
@@ -43,7 +44,7 @@ function staticConfig(app) {
 
 function sessionConfig(app, mongoDbUrl, secret) {
     const CURRENT_SECRET = secret || 'thisshouldbeabettersecret!';
-    const MongoStore = require("connect-mongo");
+    const MongoStore = require('connect-mongo');
     const session = require('express-session');
 
     const store = MongoStore.create({
@@ -54,7 +55,7 @@ function sessionConfig(app, mongoDbUrl, secret) {
         }
     });
 
-    store.on("error", function (e) {
+    store.on('error', function (e) {
         console.log('SESSION STORE ERROR', e)
     })
 
@@ -76,20 +77,24 @@ function sessionConfig(app, mongoDbUrl, secret) {
 }
 
 function mongoSanitizeConfig(app) {
-    const mongoSanitize = require("express-mongo-sanitize");
+    const mongoSanitize = require('express-mongo-sanitize');
     app.use(mongoSanitize());
 }
 
 function passportConfig(app) {
     const passport = require('passport');
     const LocalStrategy = require('passport-local');
-    const User = require("../models/user");
+    const User = require('../models/user');
 
     app.use(passport.initialize({}));
     app.use(passport.session({}));
     passport.use(new LocalStrategy(User.authenticate()));
     passport.serializeUser(User.serializeUser());
     passport.deserializeUser(User.deserializeUser());
+}
+
+function helmetConfig(app) {
+    require('./helmet-handler')(app)
 }
 
 module.exports = (app, mongoDbUrl, secret, herokuPort) => {
@@ -104,4 +109,5 @@ module.exports = (app, mongoDbUrl, secret, herokuPort) => {
     sessionConfig(app, mongoDbUrl, secret);
     mongoSanitizeConfig(app);
     passportConfig(app);
+    helmetConfig(app)
 }
