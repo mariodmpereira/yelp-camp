@@ -1,6 +1,5 @@
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
-
 }
 
 const { PORT, MONGODB_URL, SECRET } = process.env; // PORT is Heroku's default CURRENT_PORT
@@ -9,8 +8,8 @@ const app = express();
 const ExpressError = require('./utils/ExpressError');
 const routes = require('./routes');
 
-require('./modules/mongodb-util')(MONGODB_URL);
-require('./modules/middlewares-handler')(app, MONGODB_URL, SECRET, PORT);
+require('./middlewares/mongodb-util')(MONGODB_URL);
+require('./middlewares/middlewares-handler')(app, MONGODB_URL, SECRET, PORT);
 
 app.use((req, res, next) => {
     res.locals.currentUser = req.user;
